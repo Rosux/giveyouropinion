@@ -17,34 +17,34 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('login', function() {
-    return view('auth.login');
-})->name('login');
-
-Route::post('login', [AdminController::class, 'login']);
-
+// Register
 Route::get('register', function() {
     return view('auth.register');
 })->name('register');
 
 Route::post('register', [AdminController::class, 'register']);
+//
+
+// Login
+Route::get('login', function() {
+    return view('auth.login');
+})->name('login');
+
+Route::post('login', [AdminController::class, 'login']);
+//
 
 Route::prefix('form')->group(function () {
     Route::get('/', [FormController::class, 'index']);
 
-    Route::get('/create', function () {
-        return view('form/create');
-    });
+    Route::get('/create', [FormController::class, 'create']);
 
-    Route::post('/create', [FormController::class, 'create']);
+    Route::post('/store', [FormController::class, 'store']);
 
-    Route::get('/edit', function () {
-        return view('form/edit');
-    });
+    Route::get('/show/{id}', [FormController::class, 'show']);
 
-    Route::post('/edit', [FormController::class, 'edit']);
+    Route::get('/edit/{id}', [FormController::class, 'edit']);
 
-    Route::get('/show', function () {
-        return view('form/create');
-    });
+    Route::post('/update/{id}', [FormController::class, 'update']);
+
+    Route::get('/delete/{id}', [FormController::class, 'destroy']);
 });
