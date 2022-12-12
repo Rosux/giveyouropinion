@@ -19,7 +19,7 @@ Route::get('/', function () {
 
 // Register
 Route::get('register', function() {
-    return view('auth.register');
+    return view('auth.auth', ["method" => "register"]);
 })->name('register');
 
 Route::post('register', [AdminController::class, 'register']);
@@ -27,7 +27,7 @@ Route::post('register', [AdminController::class, 'register']);
 
 // Login
 Route::get('login', function() {
-    return view('auth.login');
+    return view('auth.auth', ["method" => "login"]);
 })->name('login');
 
 Route::post('login', [AdminController::class, 'login']);
