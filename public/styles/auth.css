@@ -97,10 +97,16 @@
     border: 1px solid hsl(0, 0%, 80%);
     background-color: var(--background-color);
     color: var(--text-color);
+    cursor: pointer;
 }
 /* responsive */
 @media only screen and (max-width: 1200px) {
     .auth-card{
+        width: 50% !important;
+    }
+}
+@media only screen and (max-width: 750px) {
+    .auth-card{
         width: 80% !important;
     }
-  }
+}
