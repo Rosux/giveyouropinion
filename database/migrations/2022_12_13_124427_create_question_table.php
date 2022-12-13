@@ -18,8 +18,10 @@ class CreateQuestionTable extends Migration
             $table->integer("user_id");
             $table->text("urlToken");
             $table->json("questions");
-            $table->dateTime("timeOpened");
-            $table->dateTime("timeClosed");
+            $table->text("password")->nullable(); // if password is set it will show up in the url ex: "https://gyp.nl/form/formTokenId?token='blabladitismijnpassword'"
+            $table->integer("maxAnswers")->nullable(); // max answers that can be submitted
+            $table->dateTime("timeOpened")->nullable(); // time the question is opened -- cant upload any answers after that
+            $table->dateTime("timeClosed")->nullable(); // time the question is closed -- cant upload any answers after that
             $table->timestamps();
         });
     }
