@@ -40,6 +40,7 @@ a:hover{
 [dark-mode-switch] > svg{
     height: 100%;
     fill: var(--text-color);
+    cursor: pointer;
 }
 /* header */
 header{
