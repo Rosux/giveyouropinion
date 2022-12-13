@@ -6,7 +6,9 @@
     --theme-color: #719A51;
     --theme-color-dark: #426D54;
     --theme-color-light: #B0CF98;
+    --border-color: #e6e6e6;
     --font: 'Noto Sans', sans-serif;
+    color-scheme: light;
 }
 *{
     box-sizing: border-box;
@@ -31,6 +33,14 @@ p, a, h1, h2, h3, h4, h5, h6{
 a:hover{
     color: var(--theme-color-dark);
 }
+[dark-mode-switch]{
+    display: grid;
+    place-items: center;
+}
+[dark-mode-switch] > svg{
+    height: 100%;
+    fill: var(--text-color);
+}
 /* header */
 header{
     width: 100%;
@@ -45,7 +55,7 @@ header{
     top: 0;
     left: 0;
     z-index: 999;
-    border-bottom: 1px solid rgb(230, 230, 230);
+    border-bottom: 1px solid var(--border-color);
 }
 header > a{
     font-size: 2rem;
@@ -94,10 +104,9 @@ main{
     width: fit-content;
     height: 100vh;
     background-color: var(--background-color);
-    border-left: 1px solid rgb(230, 230, 230);
     position: fixed;
     z-index: 9999;
-    right: -100%;
+    right: -100vw;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -106,7 +115,7 @@ main{
 }
 .mobile-header > .mobile-button{
     height: 3.5rem;
-    border-bottom: 1px solid rgb(230, 230, 230);
+    border-bottom: 1px solid var(--border-color);
     width: 100%;
 }
 .mobile-header > .mobile-title{
@@ -116,7 +125,7 @@ main{
     font-size: 2rem;
     padding: 1rem 0;
     margin: 0 0 1rem 0;
-    border-bottom: 1px solid rgb(230, 230, 230);
+    border-bottom: 1px solid var(--border-color);
 }
 .mobile-header > .mobile-inner-wrapper{
     width: 100%;
