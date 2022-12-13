@@ -10,3 +10,8 @@
 1. `git add .`
 1. `git commit -m "message"`
 1. `git push origin jouw-nieuwe-branch-naam`
+
+# switch branch:
+1. `git branch online-branch-name` create local branch with same online branch name
+1. `git checkout online-branch-name` switch branch naam to the online named one
+1. `git pull` get online stuff
