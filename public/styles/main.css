@@ -29,7 +29,7 @@ p, a, h1, h2, h3, h4, h5, h6{
     color: inherit;
 }
 a:hover{
-    color: var(--theme-color);
+    color: var(--theme-color-dark);
 }
 /* header */
 header{
@@ -53,7 +53,7 @@ header > a{
     color: var(--text-color);
     text-decoration: none;
 }
-header > .header-links{
+header > .header-links, header > .header-links-mobile-button{
     padding: 0 1rem 0 0;
     width: fit-content;
     height: 100%;
@@ -61,6 +61,21 @@ header > .header-links{
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
+}
+.mobile-header > .mobile-button, header > .header-links-mobile-button{
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+header > .header-links-mobile-button > svg, .mobile-header > .mobile-button > svg{
+    fill: var(--text-color);
+    cursor: pointer;
+    height: 100%;
+}
+header > .header-links-mobile-button{
+    display: none;
 }
 header > .header-links > a{
     color: var(--text-color);
@@ -72,4 +87,67 @@ header > .header-links > a:not(:last-child){
 }
 main{
     margin-top: 3.5rem
+}
+/* mobile header */
+.mobile-header{
+    min-width: 100vw;
+    width: fit-content;
+    height: 100vh;
+    background-color: var(--background-color);
+    border-left: 1px solid rgb(230, 230, 230);
+    position: fixed;
+    z-index: 9999;
+    right: -100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    transition: right .4s;
+}
+.mobile-header > .mobile-button{
+    height: 3.5rem;
+    border-bottom: 1px solid rgb(230, 230, 230);
+    width: 100%;
+}
+.mobile-header > .mobile-title{
+    width: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 2rem;
+    padding: 1rem 0;
+    margin: 0 0 1rem 0;
+    border-bottom: 1px solid rgb(230, 230, 230);
+}
+.mobile-header > .mobile-inner-wrapper{
+    width: 100%;
+    padding: 0 20%;
+}
+.mobile-header > .mobile-inner-wrapper > .mobile-header-links{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-y: auto;
+    font-size: 1.3rem;
+}
+.mobile-header > .mobile-inner-wrapper > .mobile-header-links > a{
+    width: 100%;
+    text-align: center;
+    margin: 0 0 .5rem 0;
+    padding: .5rem 1rem;
+    transition: background-color .4s;
+    background-color: transparent;
+    border-radius: 666rem;
+}
+.mobile-header > .mobile-inner-wrapper > .mobile-header-links > a:hover{
+    background-color: rgba(212, 212, 212, 0.2);
+}
+/* responsive */
+@media only screen and (max-width: 750px) {
+    .header-links-mobile-button{
+        display: flex !important;
+    }
+    .header-links{
+        display: none !important;
+    }
 }
