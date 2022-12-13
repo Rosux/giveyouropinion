@@ -4,3 +4,9 @@
 1. `php artisan key:generate`
 1. `php artisan optimize`
 1. `php artisan serve`
+
+# save:
+1. `git checkout -b nieuwe-branch-naame`
+1. `git add .`
+1. `git commit -m "message"`
+1. `git push origin jouw-nieuwe-branch-naam`

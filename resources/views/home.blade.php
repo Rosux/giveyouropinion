@@ -9,5 +9,6 @@
         <h2 class="title">Start Your Form Right Here</h2>
         {{-- if logged in make button go to create form page else login/register page --}}
         <button>Create New Form</button>
+        yo
     </div>
 </x-layout>
