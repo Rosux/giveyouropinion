@@ -19,10 +19,6 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/giveyouropinion', function () {
-    return view('giveyouropinion');
-});
-
 // Register
 Route::get('register', function() {
     return view('auth.auth', ["method" => "register"]);
