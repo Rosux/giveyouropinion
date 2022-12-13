@@ -13,10 +13,12 @@ class MobileHeader{
         });
     }
     hide(){
-        this.header.style.right = "-100%";
+        this.header.style.transition = "none";
+        this.header.style.right = "-100vw";
     }
     show(){
-        this.header.style.right = "0%";
+        this.header.style.transition = "none";
+        this.header.style.right = "0vw";
     }
 }
 const mobileHeader = new MobileHeader();
