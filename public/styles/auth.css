@@ -18,7 +18,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgb(230, 230, 230);
+    border: 1px solid var(--border-color);
 }
 .auth-wrapper > .auth-card > .auth-switch{
     width: 100%;
@@ -48,7 +48,7 @@
 .auth-wrapper > .auth-card > .hr{
     width: calc(100% - 2rem);
     height: 0;
-    border-bottom: 1px solid rgb(230, 230, 230);
+    border-bottom: 1px solid var(--border-color);
     margin: 1rem 0;
 }
 /* form wrapper ding */
@@ -83,24 +83,32 @@
 }
 .auth-form-wrapper > form > input{
     width: 100%;
+    background-color: var(--background-color);
+    color: var(--text-color);
     height: fit-content;
     padding: 0.5em 1em;
     border-radius: 666rem;
     outline: none;
-    border: 1px solid hsl(0, 0%, 80%);
+    border: 1px solid var(--border-color);
     margin-bottom: 1em;
     font-size: 1em;
 }
 .auth-form-wrapper > form > input[type="submit"]{
     width: fit-content;
     padding: 0.5rem 2rem;
-    border: 1px solid hsl(0, 0%, 80%);
+    border: 1px solid var(--border-color);
     background-color: var(--background-color);
     color: var(--text-color);
+    cursor: pointer;
 }
 /* responsive */
 @media only screen and (max-width: 1200px) {
     .auth-card{
+        width: 50% !important;
+    }
+}
+@media only screen and (max-width: 750px) {
+    .auth-card{
         width: 80% !important;
     }
-  }
+}

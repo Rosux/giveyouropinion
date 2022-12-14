@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\FormController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,16 +19,12 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/giveyouropinion', function () {
-    return view('giveyouropinion');
-});
-
 // Register
 Route::get('register', function() {
     return view('auth.auth', ["method" => "register"]);
 })->name('register');
 
-Route::post('register', [AdminController::class, 'register']);
+Route::post('register', [UserController::class, 'register']);
 //
 
 // Login
@@ -34,21 +32,29 @@ Route::get('login', function() {
     return view('auth.auth', ["method" => "login"]);
 })->name('login');
 
-Route::post('login', [AdminController::class, 'login']);
-//
+Route::post('login', [UserController::class, 'login']);
 
+// http://127.0.0.1:8000/form/....
 Route::prefix('form')->group(function () {
-    Route::get('/', [FormController::class, 'index']);
+    // for admin views all forms -- anons get redirected to homepage
+    Route::get('/', [FormController::class, 'index']); // admin's overview page (returns form.index)
+    
+    
+    // where anons go to answer a question (page)
+    Route::get('/{urlToken}', [FormController::class, 'getForm']); // anon's answer page (url token being the form 'urlToken' column)
+    
+    
+    // where anons post their form data to (backend post)
+    Route::post('/post', [FormController::class, 'postForm']); // anon's answer backend url
+    
 
-    Route::get('/create', [FormController::class, 'create']);
+    // where admins go to create questions -- anons get redirected to homepage
+    Route::post('/create', [FormController::class, 'createFormPost']); // creation backend url
+    Route::get('/create', function(){return view('form.create');}); // creation page
 
-    Route::post('/store', [FormController::class, 'store']);
 
-    Route::get('/show/{id}', [FormController::class, 'show']);
+    // where admins go to edit/close/change/open their forms
+    Route::post('/edit', [FormController::class, 'editFormPost']); // edit backend url (form id is sent with POST request)
+    Route::get('/edit/{id}', [FormController::class, 'editFormGet']); // edit page for specific form
 
-    Route::get('/edit/{id}', [FormController::class, 'edit']);
-
-    Route::post('/update/{id}', [FormController::class, 'update']);
-
-    Route::get('/delete/{id}', [FormController::class, 'destroy']);
 });
