@@ -15,7 +15,8 @@ class FormController extends Controller
     {
         // http://127.0.0.1:8000/form/
         // TODO: give the form data for the user to the form.index page (id, urlToken, maxAnswers, timeOpened, timeClosed, timestamps)
-        return view("form.index");
+        $forms = Form::get();
+        return view("form.index")->with(["forms" => $forms]);
     }
 
     // displays a form based on url form token (urlToken) to all users (id, user_id.data, questions, timeOpened, timeClosed, timestamps)

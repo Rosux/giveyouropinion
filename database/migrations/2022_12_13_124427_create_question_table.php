@@ -13,7 +13,7 @@ class CreateQuestionTable extends Migration
      */
     public function up()
     {
-        Schema::create('question', function (Blueprint $table) {
+        Schema::create('form', function (Blueprint $table) {
             $table->id();
             $table->integer("user_id");
             $table->text("urlToken");
