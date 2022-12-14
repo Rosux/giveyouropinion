@@ -14,10 +14,16 @@
                     @csrf
                     {{-- email --}}
                     <label for="email">E-mail:</label>
-                    <input type="email" placeholder="E-mail" name="email">
+                    <input type="email" placeholder="E-mail" name="email" value="{{old('email')}}">
+                    @error('email')
+                        <p class="text-danger text-xs mt-1">{{$message}}</p>
+                    @enderror
                     {{-- password --}}
                     <label for="password">Password:</label>
                     <input type="password" placeholder="Password" name="password">
+                    @error('password')
+                        <p class="text-danger text-xs mt-1">{{$message}}</p>
+                    @enderror
                     {{-- POST button --}}
                     <input type="submit" value="Login">
                 </form>
@@ -29,16 +35,28 @@
                     @csrf
                     {{-- username --}}
                     <label for="username">Username:</label>
-                    <input type="text" placeholder="Username" name="username">
+                    <input type="text" placeholder="Username" name="username" value="{{old('username')}}">
+                    @error('username')
+                        <p class="text-danger text-xs mt-1">{{$message}}</p>
+                    @enderror
                     {{-- email --}}
                     <label for="email">E-mail:</label>
-                    <input type="email" placeholder="E-mail" name="email">
+                    <input type="email" placeholder="E-mail" name="email" value="{{old('email')}}">
+                    @error('email')
+                        <p class="text-danger text-xs mt-1">{{$message}}</p>
+                    @enderror
                     {{-- password --}}
                     <label for="password">Password:</label>
                     <input type="password" placeholder="Password" name="password">
+                    @error('password')
+                        <p class="text-danger text-xs mt-1">{{$message}}</p>
+                    @enderror
                     {{-- repeat password --}}
                     <label for="passwordR">Repeat Password:</label>
                     <input type="password" placeholder="Repeat Password" name="passwordR">
+                    @error('password')
+                        <p class="text-danger text-xs mt-1">{{$message}}</p>
+                    @enderror
                     {{-- POST button --}}
                     <input type="submit" value="Register">
                 </form>

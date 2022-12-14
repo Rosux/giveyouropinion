@@ -22,7 +22,7 @@ Route::get('/', function () {
 // Register
 Route::get('register', function() {
     return view('auth.auth', ["method" => "register"]);
-})->name('register');
+})->middleware('guest')->name('register');
 
 Route::post('register', [UserController::class, 'register']);
 //
@@ -30,14 +30,17 @@ Route::post('register', [UserController::class, 'register']);
 // Login
 Route::get('login', function() {
     return view('auth.auth', ["method" => "login"]);
-})->name('login');
+})->middleware('guest')->name('login');
 
 Route::post('login', [UserController::class, 'login']);
+
+Route::get('logout', [UserController::class, 'logout'])->name('logout');
 
 // http://127.0.0.1:8000/form/....
 Route::prefix('form')->group(function () {
     // for admin views all forms -- anons get redirected to homepage
-    Route::get('/', [FormController::class, 'index']); // admin's overview page (returns form.index)
+    Route::get('/', [FormController::class, 'index'])->middleware('auth'); 
+    // admin's overview page (returns form.index)
     
     
     // where anons go to answer a question (page)
