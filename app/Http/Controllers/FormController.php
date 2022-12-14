@@ -37,6 +37,10 @@ class FormController extends Controller
     {
         // ID = $request["id"]
         // TODO: handle a post request of answers from anon's
+        $response = [
+            "result"=>"no data sent"
+        ];
+        return response($response, 200)->header('Content-Type', 'application/json');
     }
 
     /**
@@ -46,6 +50,10 @@ class FormController extends Controller
     {
         // ID = $request["id"]
         // TODO: handle a post request from admins/users that create a new form
+        $response = [
+            "result"=>"no data sent"
+        ];
+        return response($response, 200)->header('Content-Type', 'application/json');
     }
 
     /**
@@ -56,6 +64,10 @@ class FormController extends Controller
         // ID = $request["id"]
         // TODO: handle a POST request where the user/admin edits their form
         // TODO: make sure the form belongs to the current user
+        $response = [
+            "result"=>"no data sent"
+        ];
+        return response($response, 200)->header('Content-Type', 'application/json');
     }
 
     /**
