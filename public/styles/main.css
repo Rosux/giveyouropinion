@@ -42,6 +42,16 @@ a:hover{
     fill: var(--text-color);
     cursor: pointer;
 }
+.hr-main{
+    width: 60%;
+    height: 0;
+    border: 1px solid var(--border-color);
+}
+main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 /* header */
 header{
     width: 100%;
@@ -159,5 +169,13 @@ main{
     }
     .header-links{
         display: none !important;
+    }
+}
+
+/* responsive */
+@media only screen and (max-width: 1200px) {
+    .how-to-wrapper{
+        width: 90% !important;
+        grid-template-columns: 100% !important;
     }
 }

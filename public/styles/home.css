@@ -60,3 +60,38 @@ p.landing-title > a.small{
     transform: translate(0, -10%);
     background-color: var(--theme-color-dark);
 }
+/* how to use */
+.theme-bg-dark{
+    background-color: var(--background-color);
+}
+.how-to-wrapper{
+    width: 60%;
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(2, 50%);
+    grid-template-rows: auto;
+    grid-column-gap: 0px;
+    grid-row-gap: 4rem;
+    padding: 2rem 0;
+}
+.how-to-wrapper > .how-to-card{
+    width: 90%;
+    height: fit-content;
+    padding: 2rem;
+    background-color: var(--theme-color);
+    border-radius: 2rem;
+    box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.32);
+}
+.how-to-card > .how-to-step-counter{
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 2em;
+    margin-bottom: 1rem;
+}
+.how-to-card > .how-to-desc{
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 1.3em;
+}
