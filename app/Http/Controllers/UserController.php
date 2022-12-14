@@ -37,7 +37,7 @@ class UserController extends Controller
         auth()->login($user);
 
         // Redirect to Home-Page
-        return redirect('/form/')->with('message', 'Welcome ' . $formFields['username']);
+        return redirect('form/')->with('message', 'Welcome ' . $formFields['username']);
 
     }
 
