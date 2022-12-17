@@ -17,7 +17,10 @@ class FormController extends Controller
     public function index()
     {
         // http://127.0.0.1:8000/form/
-        // TODO: give the form data for the user to the form.index page (id, urlToken, maxAnswers, timeOpened, timeClosed, timestamps)
+        if(Form::where('user_id', Auth::user()->id)->get()->count() <= 0){
+            // question doesnt even exist
+            return view("form.index");
+        }
         $forms = Form::where('user_id', Auth::user()->id)->get();
         return view("form.index")->with(["forms" => $forms]);
     }
@@ -51,8 +54,7 @@ class FormController extends Controller
      */
     public function getForm($urlToken, $password="")
     {
-        // http://127.0.0.1:8000/form/$urlToken
-        // TODO: password implementatie
+        // http://127.0.0.1:8000/form/$urlToken/$Password
 
         if(Form::where('urlToken', $urlToken)->get()->count() <= 0){
             // no form found so give error message
@@ -66,8 +68,13 @@ class FormController extends Controller
         }else{
             return view("form.form")->with(["error" => "Password Incorrect!"]);
         }
-        
     }
+
+
+
+
+
+
 
     /**
      * handle user question input
@@ -90,9 +97,26 @@ class FormController extends Controller
     {
         // ID = $request["id"]
         // TODO: handle a post request from admins/users that create a new form
-        $response = [
-            "result"=>"no data sent"
-        ];
+        // TODO validate the questions
+
+        return false;
+
+        // TODO create UUID token (https://github.com/ramsey/uuid) need to install this for later
+        // also find out a way to store the questions consistently
+        // also find a way to structure the questions so it can also be validated
+
+        // $form = Form::create([
+        //     'user_id' => Auth::user()->id,
+        //     'urlToken' => $formFields['username'],
+        //     'questions' => $request['username'] // not safe
+        // ]);
+
+
+
+
+
+
+        $response = ["result"=>"no data sent"];
         return response($response, 200)->header('Content-Type', 'application/json');
     }
 
@@ -110,15 +134,26 @@ class FormController extends Controller
         return response($response, 200)->header('Content-Type', 'application/json');
     }
 
+
+
+
+
+
+
     /**
      * return the form edit page based on url id
      */
     public function editFormGet($id)
     {
         // http://127.0.0.1:8000/form/edit/$id
-        // $id = the id of the form to be edited
-        // TODO: give the form data depending on {id} in the url to edit (all data)
-        // TODO: make sure the form belongs to the current user
-        return view("form.edit");
+
+        $form = Form::where('id', $id)->where('user_id', Auth::user()->id)->get()->first();
+
+        if(Form::where('id', $id)->where('user_id', Auth::user()->id)->get()->count() <= 0){
+            // question doesnt even exist
+            return redirect("/form");
+        }
+        
+        return view("form.edit")->with(["form"=>$form]);
     }
 }
