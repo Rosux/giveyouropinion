@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
+use App\Models\User;
 use App\Models\Form;
+use App\Models\Answer;
 
 class FormController extends Controller
 {
@@ -15,20 +18,56 @@ class FormController extends Controller
     {
         // http://127.0.0.1:8000/form/
         // TODO: give the form data for the user to the form.index page (id, urlToken, maxAnswers, timeOpened, timeClosed, timestamps)
-        $forms = Form::get();
+        $forms = Form::where('user_id', Auth::user()->id)->get();
         return view("form.index")->with(["forms" => $forms]);
     }
 
-    // displays a form based on url form token (urlToken) to all users (id, user_id.data, questions, timeOpened, timeClosed, timestamps)
-    public function getForm($urlToken)
-    {
-        // http://127.0.0.1:8000/form/$urlToken
-        // $urlToken = the token of the form to be displayed/sent (check and validate the token, all tokens are unique)
-        // TODO: give the form data depending on {urlToken} in the url
-        return view("form.form");
+    /**
+     * returns answers given to a question based on urlToken
+     */
+    public function answersIndex($urlToken){
+        // http://127.0.0.1:8000/form/answers/{urlToken}
+        
+        // if form is not found redirect otherwise set form data to $formID
+        if(Form::where('urlToken', $urlToken)->get()->count() <= 0){
+            // question doesnt even exist
+            return redirect('form/');
+        }
+        $formID = Form::where('urlToken', $urlToken)->get()->first()['id'];
+
+        // send questions (can be empty array) to form.answers
+        if(Answer::where('question_id', $formID)->get()->count() <= 0){
+            // question doesnt even exist
+            return view("form.answers");
+        }
+        $answers = Answer::where('question_id', $formID)->get();
+        
+        return view("form.answers")->with(["answers"=>$answers]);
     }
 
+    /**
+     * returns a form page with the form if password is set correctly or doesnt exists (and of course the form has to exist)
+     * displays a form based on url form token (urlToken) to all users
+     */
+    public function getForm($urlToken, $password="")
+    {
+        // http://127.0.0.1:8000/form/$urlToken
+        // TODO: password implementatie
 
+        if(Form::where('urlToken', $urlToken)->get()->count() <= 0){
+            // no form found so give error message
+            return view("form.form")->with(["error" => "No Form Found!"]);
+        }
+        $form = Form::where('urlToken', $urlToken)->get()->first();
+
+        // check for password if it exists or if its set correctly
+        if($form["password"] === null || $form["password"] == $password){
+            return view("form.form")->with(["form" => $form]);
+        }else{
+            return view("form.form")->with(["error" => "Password Incorrect!"]);
+        }
+        
+    }
 
     /**
      * handle user question input
