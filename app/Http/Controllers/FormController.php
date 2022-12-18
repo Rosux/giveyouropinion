@@ -104,6 +104,11 @@ class FormController extends Controller
         // TODO create UUID token (https://github.com/ramsey/uuid) need to install this for later
         // also find out a way to store the questions consistently
         // also find a way to structure the questions so it can also be validated
+        // ex:
+        // [
+        //     ["question_title"=>"Q_TITLE", "question_type"=>1, "question_image"=>"blabla.png"],
+        //     ["question_title"=>"Q_TITLE2", "question_type"=>3, "question_image"=>"blabla2.png"]
+        // ]
 
         // $form = Form::create([
         //     'user_id' => Auth::user()->id,
@@ -114,10 +119,11 @@ class FormController extends Controller
 
         // user_id must be sent
         $userId = $request->input('userId');
-
+        
         // urltoken gets generated with UUID thing
-
+        
         // questions must be built from here, we only take the value and coresponding question type to validate it
+        $questions = $request->input('question.0.question');
         
         // password can only be true/false so we can generate the password/token
         $password = $request->input('password', false);
