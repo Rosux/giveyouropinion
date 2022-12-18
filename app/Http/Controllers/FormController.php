@@ -112,6 +112,25 @@ class FormController extends Controller
         // ]);
 
 
+        // user_id must be sent
+        $userId = $request->input('userId');
+
+        // urltoken gets generated with UUID thing
+
+        // questions must be built from here, we only take the value and coresponding question type to validate it
+        
+        // password can only be true/false so we can generate the password/token
+        $password = $request->input('password', false);
+
+        // max answers cant be above integer limit
+        $maxAnswers = $request->input('maxAnswers', null);
+
+        // timeOpened cant be earlier than right now (creation time)
+        $timeOpened = $request->input('timeOpened', null);
+
+        // timeClosed cant be in the past based on creation time
+        $timeClosed = $request->input('timeClosed', null);
+
 
 
 
