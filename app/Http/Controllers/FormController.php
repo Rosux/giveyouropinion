@@ -117,6 +117,9 @@ class FormController extends Controller
         // ]);
 
 
+        // https://laravel.com/docs/5.1/requests#accessing-the-request
+
+
         // user_id must be sent
         $userId = $request->input('userId');
         
