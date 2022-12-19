@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Form;
 use App\Models\Answer;
+use Ramsey\Uuid\Uuid;
 
 class FormController extends Controller
 {
@@ -99,47 +100,65 @@ class FormController extends Controller
         // TODO: handle a post request from admins/users that create a new form
         // TODO validate the questions
 
-        return false;
-
+        
         // TODO create UUID token (https://github.com/ramsey/uuid) need to install this for later
         // also find out a way to store the questions consistently
         // also find a way to structure the questions so it can also be validated
         // ex:
         // [
-        //     ["question_title"=>"Q_TITLE", "question_type"=>1, "question_image"=>"blabla.png"],
-        //     ["question_title"=>"Q_TITLE2", "question_type"=>3, "question_image"=>"blabla2.png"]
-        // ]
-
-        // $form = Form::create([
+            //     ["question_title"=>"Q_TITLE", "question_type"=>1, "question_image"=>"blabla.png"],
+            //     ["question_title"=>"Q_TITLE2", "question_type"=>3, "question_image"=>"blabla2.png"]
+            // ]
+            
+            // $form = Form::create([
         //     'user_id' => Auth::user()->id,
         //     'urlToken' => $formFields['username'],
         //     'questions' => $request['username'] // not safe
         // ]);
-
-
+        
+        
         // https://laravel.com/docs/5.1/requests#accessing-the-request
 
+        $formData = $request->validate([
+            'questions' => ['required'],
+            // 'timeOpened' => ['date_format:Y-m-d H:i:s", "after:start_time'],
+            // 'timeClosed' => ['date_format:Y-m-d H:i:s", "after:start_time'],
+            'maxAnswers' => ['integer', 'gt:0']
+        ]);
+        
+        // user_id
+        $userId = Auth::user()->id;
+        // urlToken
+        $urlToken = Uuid::uuid4();
+        // password
+        if(!isset($formData['password'])){
+            $formData['password'] = null;
+        }
+        // maxAnswers
+        if(!isset($formData["maxAnswers"])){
+            $formData['maxAnswers'] = null;
+        }
+        // timeOpened
+        if(!isset($formData["timeOpened"])){
+            $formData["timeOpened"] = null;
+        }
+        // timeClosed
+        if(!isset($formData["timeClosed"])){
+            $formData["timeClosed"] = null;
+        }
 
-        // user_id must be sent
-        $userId = $request->input('userId');
+        // question
+        // $formData['questions'] = TOEKOMSTIGE DATA];
+        $questions = [];
+        // for all questions add the type/image/title/preholder_text
         
-        // urltoken gets generated with UUID thing
-        
+
+        return $formData;
+
+
         // questions must be built from here, we only take the value and coresponding question type to validate it
-        $questions = $request->input('question.0.question');
+        // $questions = $request->input('question.0.question');
         
-        // password can only be true/false so we can generate the password/token
-        $password = $request->input('password', false);
-
-        // max answers cant be above integer limit
-        $maxAnswers = $request->input('maxAnswers', null);
-
-        // timeOpened cant be earlier than right now (creation time)
-        $timeOpened = $request->input('timeOpened', null);
-
-        // timeClosed cant be in the past based on creation time
-        $timeClosed = $request->input('timeClosed', null);
-
 
 
 

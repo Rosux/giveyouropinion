@@ -5,7 +5,11 @@
     <form method="POST" action="/form/create">
         @csrf
 
-        <input type="questions" name="questions">
+        <input type="text" name="questions" placeholder="questions"><br>
+        <input type="checkbox" name="password" placeholder="password"><br>
+        <input type="number" name="maxAnswers" placeholder="maxAnswers"><br>
+        <input type="datetime-local" name="timeOpened" placeholder="timeOpened"><br>
+        <input type="datetime-local" name="timeClosed" placeholder="timeClosed"><br>
         
         <input type="submit" value="post">
     </form>
