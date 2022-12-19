@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 use App\Models\User;
 use App\Models\Form;
@@ -99,22 +100,6 @@ class FormController extends Controller
         // ID = $request["id"]
         // TODO: handle a post request from admins/users that create a new form
         // TODO validate the questions
-
-        
-        // TODO create UUID token (https://github.com/ramsey/uuid) need to install this for later
-        // also find out a way to store the questions consistently
-        // also find a way to structure the questions so it can also be validated
-        // ex:
-        // [
-            //     ["question_title"=>"Q_TITLE", "question_type"=>1, "question_image"=>"blabla.png"],
-            //     ["question_title"=>"Q_TITLE2", "question_type"=>3, "question_image"=>"blabla2.png"]
-            // ]
-            
-            // $form = Form::create([
-        //     'user_id' => Auth::user()->id,
-        //     'urlToken' => $formFields['username'],
-        //     'questions' => $request['username'] // not safe
-        // ]);
         
         
         // https://laravel.com/docs/5.1/requests#accessing-the-request
@@ -127,37 +112,60 @@ class FormController extends Controller
         ]);
         
         // user_id
-        $userId = Auth::user()->id;
+        $formData["userId"] = Auth::user()->id;
         // urlToken
-        $urlToken = Uuid::uuid4();
+        $formData["urlToken"] = Uuid::uuid4();
         // password
-        if(!isset($formData['password'])){
-            $formData['password'] = null;
-        }
+        $request->has("password") ? $formData["password"] = Str::random(30) : $formData["password"] = false;
         // maxAnswers
-        if(!isset($formData["maxAnswers"])){
-            $formData['maxAnswers'] = null;
-        }
+        $request->has("maxAnswers") ? $formData["maxAnswers"] = (int)$request->input('maxAnswers') : $formData["maxAnswers"] = null;
         // timeOpened
-        if(!isset($formData["timeOpened"])){
-            $formData["timeOpened"] = null;
-        }
+        $request->has("timeOpened") ? $formData["timeOpened"] = $request->input('timeOpened') : $formData["timeOpened"] = null;
         // timeClosed
-        if(!isset($formData["timeClosed"])){
-            $formData["timeClosed"] = null;
-        }
+        $request->has("timeClosed") ? $formData["timeClosed"] = $request->input('timeClosed') : $formData["timeClosed"] = null;
+        
 
         // question
         // $formData['questions'] = TOEKOMSTIGE DATA];
-        $questions = [];
-        // for all questions add the type/image/title/preholder_text
+        $Q = json_decode($request->input('questions'), true);
+        // structure example
+        // $questions = [
+        //     "title"=>"FORM TITLE",
+        //     "headerimg"=>"../blabla",
+        //     "questions"=>[
+        //         [
+        //             "question_title"=>"QuestionTitle1",
+        //             "type"=>1,
+        //             "placeholder"=>"placeholder1"
+        //         ],
+        //         [
+        //             "question_title"=>"QuestionTitle2",
+        //             "type"=>2,
+        //             "choices"=>[
+        //                 0=>"checkbox text 1",
+        //                 1=>"checkbox text 2",
+        //                 2=>"checkbox text 3"
+        //             ]
+        //         ],
+        //         [
+        //             "question_title"=>"QuestionTitle3",
+        //             "type"=>3,
+        //             "choices"=>[
+        //                 "choice 1",
+        //                 "choice 2",
+        //                 "choice 3"
+        //             ]
+        //         ]
+        //     ]
+        // ];
+
+        // questions must be built from here, we only take the value and coresponding question type to validate it
+        // $questions = $request->input('question.0.question');
         
 
         return $formData;
 
 
-        // questions must be built from here, we only take the value and coresponding question type to validate it
-        // $questions = $request->input('question.0.question');
         
 
 
