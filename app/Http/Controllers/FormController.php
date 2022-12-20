@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Form;
 use App\Models\Answer;
 use Ramsey\Uuid\Uuid;
+use Carbon\Carbon;
 
 class FormController extends Controller
 {
@@ -101,37 +102,61 @@ class FormController extends Controller
         // TODO: handle a post request from admins/users that create a new form
         // TODO validate the questions
         
-        
         // https://laravel.com/docs/5.1/requests#accessing-the-request
 
         $formData = $request->validate([
-            'questions' => ['required'],
-            // 'timeOpened' => ['date_format:Y-m-d H:i:s", "after:start_time'],
-            // 'timeClosed' => ['date_format:Y-m-d H:i:s", "after:start_time'],
-            'maxAnswers' => ['integer', 'gt:0']
+            'title' => ['required', 'string', 'min:3', 'max:255'],
+            'questions' => ['required', 'json'],
+            'questions.*.question_title' => ['string', 'min:3', 'max:255', 'required'],
+            // 'questions.*.type' => ['integer', 'min:1', 'max:3', 'required'],
+            // 'questions.*.placeholder' => ['string', 'min:3', 'max:255'],
+            // 'questions.*.choices' => ['array', 'min:1'],
+            'maxAnswers' => ['nullable', 'integer', 'gt:0']
         ]);
+
+        return "dlaldlsa";
         
         // user_id
         $formData["userId"] = Auth::user()->id;
         // urlToken
         $formData["urlToken"] = Uuid::uuid4();
         // password
-        $request->has("password") ? $formData["password"] = Str::random(30) : $formData["password"] = false;
+        $request->has("password") ? $formData["password"] = Str::random(30) : $formData["password"] = null;
         // maxAnswers
-        $request->has("maxAnswers") ? $formData["maxAnswers"] = (int)$request->input('maxAnswers') : $formData["maxAnswers"] = null;
+        ($request->has("maxAnswers") && $request->input("maxAnswers") > 0) ? $formData["maxAnswers"] = (int)$request->input('maxAnswers') : $formData["maxAnswers"] = null;
         // timeOpened
-        $request->has("timeOpened") ? $formData["timeOpened"] = $request->input('timeOpened') : $formData["timeOpened"] = null;
+        if($request->has("timeOpened")){
+            $timeOpened = new Carbon($request->input("timeOpened"));
+            if($timeOpened->format('Y-m-d H:i:s') > Carbon::now()->format('Y-m-d H:i:s')){
+                // if timeOpened is set AND timeOpened is later than now
+                $formData["timeOpened"] = $timeOpened->toDateTimeString();
+            }else{
+                $formData["timeOpened"] = Carbon::now()->toDateTimeString();
+            }
+        }else{
+            $formData["timeOpened"] = Carbon::now()->toDateTimeString();
+        }
         // timeClosed
-        $request->has("timeClosed") ? $formData["timeClosed"] = $request->input('timeClosed') : $formData["timeClosed"] = null;
-        
+        if($request->has("timeClosed")){
+            $timeClosed = new Carbon($request->input("timeClosed"));
+            if($timeClosed->format('Y-m-d H:i:s') > Carbon::now()->format('Y-m-d H:i:s')){
+                // if timeClosed is set AND timeClosed is later than now
+                $formData["timeClosed"] = $timeClosed->toDateTimeString();
+            }else{
+                $formData["timeClosed"] = null;
+            }
+        }else{
+            $formData["timeClosed"] = null;
+        }
+
+
+
 
         // question
         // $formData['questions'] = TOEKOMSTIGE DATA];
-        $Q = json_decode($request->input('questions'), true);
         // structure example
-        // $questions = [
+        // $formData["questions"] = json_encode([
         //     "title"=>"FORM TITLE",
-        //     "headerimg"=>"../blabla",
         //     "questions"=>[
         //         [
         //             "question_title"=>"QuestionTitle1",
@@ -142,9 +167,9 @@ class FormController extends Controller
         //             "question_title"=>"QuestionTitle2",
         //             "type"=>2,
         //             "choices"=>[
-        //                 0=>"checkbox text 1",
-        //                 1=>"checkbox text 2",
-        //                 2=>"checkbox text 3"
+        //                 "checkbox text 1",
+        //                 "checkbox text 2",
+        //                 "checkbox text 3"
         //             ]
         //         ],
         //         [
@@ -157,15 +182,32 @@ class FormController extends Controller
         //             ]
         //         ]
         //     ]
-        // ];
+        // ]);
+
+
+        // $Q = json_decode($formData["questions"], true);
+        $Q = [];
+        return $Q;
+
 
         // questions must be built from here, we only take the value and coresponding question type to validate it
         // $questions = $request->input('question.0.question');
         
+        
+        $form = Form::create([
+            'user_id' => $formData['userId'],
+            'urlToken' => $formData['urlToken'],
+            'questions' => json_encode($formData['questions'], true),
+            'password' => $formData['password'],
+            'maxAnswers' => $formData['maxAnswers'],
+            'timeOpened' => $formData['timeOpened'],
+            'timeClosed' => $formData['timeClosed'],
+        ]);
+        
 
         return $formData;
 
-
+        // insert into db all is good $fornData
         
 
 
