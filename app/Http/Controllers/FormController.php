@@ -157,13 +157,17 @@ class FormController extends Controller
         ];
 
         $RQ = json_decode($request->input("questions"), true);
+        if($RQ === null){
+            $response = ["success"=>false,"error"=>"Data error."];
+            return $response;
+        }
         if(count($RQ) < 1){
             // return error not enough questions given
-            $response = ["result"=>"Can't have 0 questions."];
+            $response = ["success"=>false,"error"=>"Can't have 0 questions."];
             return $response;
         }elseif(count($RQ) > $this->maxQuestions){
             // return error too many questions given
-            $response = ["result"=>"Can't have more than "+$this->maxQuestions+" questions."];
+            $response = ["success"=>false,"error"=>"Can't have more than "+$this->maxQuestions+" questions."];
             return $response;
         }
         for($i = 0;$i<count($RQ);$i++){
@@ -244,7 +248,7 @@ class FormController extends Controller
 
 
 
-        $response = ["result"=>"no data sent"];
+        $response = ["success"=>false,"error"=>"no data sent"];
         return response($response, 200)->header('Content-Type', 'application/json');
     }
 
