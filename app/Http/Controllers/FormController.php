@@ -14,6 +14,7 @@ use Carbon\Carbon;
 
 class FormController extends Controller
 {
+    private $maxQuestions = 255;
     /**
      * returns a page for admins to see all forms
      */
@@ -104,17 +105,16 @@ class FormController extends Controller
         
         // https://laravel.com/docs/5.1/requests#accessing-the-request
 
+        // TODO: if validator fails send JSON data back not a whole page
         $formData = $request->validate([
             'title' => ['required', 'string', 'min:3', 'max:255'],
             'questions' => ['required', 'json'],
-            'questions.*.question_title' => ['string', 'min:3', 'max:255', 'required'],
+            // 'questions.*.question_title' => ['string', 'min:3', 'max:255', 'required'],
             // 'questions.*.type' => ['integer', 'min:1', 'max:3', 'required'],
             // 'questions.*.placeholder' => ['string', 'min:3', 'max:255'],
             // 'questions.*.choices' => ['array', 'min:1'],
             'maxAnswers' => ['nullable', 'integer', 'gt:0']
         ]);
-
-        return "dlaldlsa";
         
         // user_id
         $formData["userId"] = Auth::user()->id;
@@ -148,7 +148,47 @@ class FormController extends Controller
         }else{
             $formData["timeClosed"] = null;
         }
+        
 
+
+        $Q = [
+            "title"=>$request->input("title"),
+            "questions"=>[]
+        ];
+
+        $RQ = json_decode($request->input("questions"), true);
+        if(count($RQ) < 1){
+            // return error not enough questions given
+            $response = ["result"=>"Can't have 0 questions."];
+            return $response;
+        }elseif(count($RQ) > $this->maxQuestions){
+            // return error too many questions given
+            $response = ["result"=>"Can't have more than "+$this->maxQuestions+" questions."];
+            return $response;
+        }
+        for($i = 0;$i<count($RQ);$i++){
+            // TODO validate stuff here
+            $row = [
+                "question_title"=>$RQ[$i]["question_title"],
+                "type"=>$RQ[$i]["type"]
+            ];
+            if($row["type"] == 1){
+                // text input
+                $row["placeholder"] = $RQ[$i]["placeholder"];
+            }elseif($row["type"] == 2 || $row["type"] == 3){
+                // checkboxes/radio buttons
+                $row["choices"] = [];
+                for($j=0;$j<count($RQ[$i]["choices"]);$j++){
+                    array_push($row["choices"], $RQ[$i]["choices"][$j]);
+                }
+            }else{
+                // wrong type
+                continue;
+            }
+            array_push($Q["questions"], $row);
+        }
+        $formData["questions"] = $Q;
+        return $Q;
 
 
 
@@ -167,31 +207,22 @@ class FormController extends Controller
         //             "question_title"=>"QuestionTitle2",
         //             "type"=>2,
         //             "choices"=>[
-        //                 "checkbox text 1",
-        //                 "checkbox text 2",
-        //                 "checkbox text 3"
+        //                 0=>"checkbox text 1",
+        //                 1=>"checkbox text 2",
+        //                 2=>"checkbox text 3"
         //             ]
         //         ],
         //         [
         //             "question_title"=>"QuestionTitle3",
         //             "type"=>3,
         //             "choices"=>[
-        //                 "choice 1",
-        //                 "choice 2",
-        //                 "choice 3"
+        //                 0=>"choice 1",
+        //                 1=>"choice 2",
+        //                 2=>"choice 3"
         //             ]
         //         ]
         //     ]
         // ]);
-
-
-        // $Q = json_decode($formData["questions"], true);
-        $Q = [];
-        return $Q;
-
-
-        // questions must be built from here, we only take the value and coresponding question type to validate it
-        // $questions = $request->input('question.0.question');
         
         
         $form = Form::create([

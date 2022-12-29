@@ -46,8 +46,21 @@
             },
             {
                 question_title: 'title2',
-                type: 1,
-                placeholder: 'placeholder2'
+                type: 2,
+                choices: {
+                    0: "blabla0",
+                    1: "blabla1",
+                    2: "blabla2"
+                }
+            },
+            {
+                question_title: 'title2',
+                type: 3,
+                choices: {
+                    0: "blabla0",
+                    1: "blabla1",
+                    2: "blabla2"
+                }
             }
         ];
 
@@ -70,7 +83,13 @@
         console.log("sent data:",formData);
 
         postData(formies, (e)=>{
-            console.log(e.response);
+            try {
+                res = JSON.parse(e.response);
+            }catch(error){
+                res = e.response;
+            }
+            
+            console.log(res, JSON.stringify(res));
         });
     
 
