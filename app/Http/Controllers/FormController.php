@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 use App\Models\User;
@@ -11,10 +12,10 @@ use App\Models\Form;
 use App\Models\Answer;
 use Ramsey\Uuid\Uuid;
 use Carbon\Carbon;
+use Moment\Moment;
 
 class FormController extends Controller
 {
-    private $maxQuestions = 255;
     /**
      * returns a page for admins to see all forms
      */
@@ -101,21 +102,16 @@ class FormController extends Controller
     {
         // ID = $request["id"]
         // TODO: handle a post request from admins/users that create a new form
-        // TODO validate the questions
-        
-        // https://laravel.com/docs/5.1/requests#accessing-the-request
 
-        // TODO: if validator fails send JSON data back not a whole page
+
+        // validate/create title/maxAnswers/userId/urlToken/password/maxAnswers/timeOpened/timeClosed
         $formData = $request->validate([
             'title' => ['required', 'string', 'min:3', 'max:255'],
-            'questions' => ['required', 'json'],
-            // 'questions.*.question_title' => ['string', 'min:3', 'max:255', 'required'],
-            // 'questions.*.type' => ['integer', 'min:1', 'max:3', 'required'],
-            // 'questions.*.placeholder' => ['string', 'min:3', 'max:255'],
-            // 'questions.*.choices' => ['array', 'min:1'],
-            'maxAnswers' => ['nullable', 'integer', 'gt:0']
+            'maxAnswers' => ['nullable', 'integer', 'gt:0'],
+            'timeZone' => 'required|timezone',
+            'timeOpened' => 'nullable|date',
+            'timeClosed' => 'nullable|date',
         ]);
-        
         // user_id
         $formData["userId"] = Auth::user()->id;
         // urlToken
@@ -124,31 +120,67 @@ class FormController extends Controller
         $request->has("password") ? $formData["password"] = Str::random(30) : $formData["password"] = null;
         // maxAnswers
         ($request->has("maxAnswers") && $request->input("maxAnswers") > 0) ? $formData["maxAnswers"] = (int)$request->input('maxAnswers') : $formData["maxAnswers"] = null;
-        // timeOpened
-        if($request->has("timeOpened")){
-            $timeOpened = new Carbon($request->input("timeOpened"));
-            if($timeOpened->format('Y-m-d H:i:s') > Carbon::now()->format('Y-m-d H:i:s')){
-                // if timeOpened is set AND timeOpened is later than now
-                $formData["timeOpened"] = $timeOpened->toDateTimeString();
+
+        $userTimeZone = $request->input("timeZone");
+        
+        // timezone & timeOpened
+        if($request->has('timeOpened')){
+            // convert usertime to current server time
+            $userDateOpenTime = new Carbon($formData['timeOpened'], $userTimeZone);
+            if($userDateOpenTime->format('Y-m-d H:i:sO') > Carbon::now($userTimeZone)->format('Y-m-d H:i:sO')){
+                // if time is greater than now set timeOpened to user time converted to server time
+                $formData['timeOpened'] = $userDateOpenTime->format('Y-m-d H:i:sO');
             }else{
-                $formData["timeOpened"] = Carbon::now()->toDateTimeString();
+                // set timeOpened to current servertime
+                $formData['timeOpened'] = Carbon::now($userTimeZone)->format('Y-m-d H:i:sO');
             }
         }else{
-            $formData["timeOpened"] = Carbon::now()->toDateTimeString();
-        }
-        // timeClosed
-        if($request->has("timeClosed")){
-            $timeClosed = new Carbon($request->input("timeClosed"));
-            if($timeClosed->format('Y-m-d H:i:s') > Carbon::now()->format('Y-m-d H:i:s')){
-                // if timeClosed is set AND timeClosed is later than now
-                $formData["timeClosed"] = $timeClosed->toDateTimeString();
-            }else{
-                $formData["timeClosed"] = null;
-            }
-        }else{
-            $formData["timeClosed"] = null;
+            // set timeOpened to current servertime
+            $formData['timeOpened'] = Carbon::now($userTimeZone)->format('Y-m-d H:i:sO');
         }
         
+        // timezone & timeClosed
+        if($request->has('timeClosed')){
+            // convert usertime to current server time
+            $userDateCloseTime = new Carbon($formData['timeClosed'], $userTimeZone);
+            if($userDateCloseTime->format('Y-m-d H:i:sO') > Carbon::now($userTimeZone)->format('Y-m-d H:i:sO')){
+                // if time is greater than now set timeClosed to user time converted to server time
+                $formData['timeClosed'] = $userDateCloseTime->format('Y-m-d H:i:sO');
+            }else{
+                $formData['timeClosed'] = null;
+            }
+        }else{
+            $formData['timeClosed'] = null;
+        }
+
+
+        // validate questions array json stuff
+        $requestData = request()->all();
+        $questions = json_decode($requestData['questions'], true);
+
+        // thank you chatgpt for saving me
+        $validator = Validator::make(['questions' => $questions], [
+            'questions' => 'required|array|min:1|max:255',
+            'questions.*' => 'required|array',
+            'questions.*.question_title' => 'required|string|max:255|min:1',
+            'questions.*.type' => 'required|integer|in:1,2,3',
+            'questions.*.placeholder' => 'required_if:questions.*.type,1|string|nullable|max:255|min:1',
+            'questions.*.choices' => 'required_if:questions.*.type,2|required_if:questions.*.type,3|array|nullable|min:1|max:25',
+            'questions.*.choices.*' => 'required_if:questions.*.type,2|required_if:questions.*.type,3|string|max:255|min:1',
+        ]);
+        
+        if ($validator->fails()) {
+            // validation failed
+            return "failure";
+            // return response()->json(['errors' => $validator->errors()], 400);
+        }
+        return "success";
+
+
+
+
+
+
 
 
         $Q = [
@@ -165,9 +197,9 @@ class FormController extends Controller
             // return error not enough questions given
             $response = ["success"=>false,"error"=>"Can't have 0 questions."];
             return $response;
-        }elseif(count($RQ) > $this->maxQuestions){
+        }elseif(count($RQ) > 255){
             // return error too many questions given
-            $response = ["success"=>false,"error"=>"Can't have more than "+$this->maxQuestions+" questions."];
+            $response = ["success"=>false,"error"=>"Can't have more than 255 questions."];
             return $response;
         }
         for($i = 0;$i<count($RQ);$i++){

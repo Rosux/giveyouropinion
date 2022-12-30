@@ -11,7 +11,7 @@
 
         <input type="checkbox" name="password" placeholder="password"><br>
         <input type="number" name="maxAnswers" placeholder="maxAnswers"><br>
-        <input type="datetime-local" name="timeOpened" placeholder="timeOpened"><br>
+        <input type="datetime-local" name="timeOpened" placeholder="timeOpened" value="2022-12-30T11:11"><br>
         <input type="datetime-local" name="timeClosed" placeholder="timeClosed"><br>
         <input type="submit" value="post">
     </form>
@@ -38,60 +38,68 @@
             request.send(new FormData(form));
         }
 
-        var data = [
-            {
-                question_title: 'title1',
-                type: 1,
-                placeholder: 'placeholder1'
-            },
-            {
-                question_title: 'title2',
-                type: 2,
-                choices: {
-                    0: "blabla0",
-                    1: "blabla1",
-                    2: "blabla2"
+        function dd(){
+            var data = [
+                {
+                    question_title: 'title1',
+                    type: 1,
+                    placeholder: 'placeholder1'
+                },
+                {
+                    question_title: 'title2',
+                    type: 2,
+                    choices: {
+                        0: "blabla0",
+                        1: "blabla1",
+                        2: "blabla2"
+                    }
+                },
+                {
+                    question_title: 'title2',
+                    type: 3,
+                    choices: {
+                        0: "blabla0",
+                        1: "blabla1",
+                        2: "blabla2"
+                    }
                 }
-            },
-            {
-                question_title: 'title2',
-                type: 3,
-                choices: {
-                    0: "blabla0",
-                    1: "blabla1",
-                    2: "blabla2"
-                }
+            ];
+            const form = document.getElementById('form');
+            let formData = new FormData(form);
+            formData.append('questions', JSON.stringify(data));
+
+            // TIMEZONE TIMEZONE
+            const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            // add the timeZone object to the form data
+            formData.append('timeZone', userTimezone);
+            // TIMEZONE TIMEZONE
+
+            const formies = document.createElement("form");
+            formies.action = "/form/create";
+            formies.method = "POST";
+            // foreach data add it to new form element
+            for(const val of formData.entries()){
+                let i = document.createElement("input");
+                i.name = val[0];
+                i.value = val[1];
+                formies.appendChild(i);
             }
-        ];
-
-
-        const form = document.getElementById('form');
-        let formData = new FormData(form);
-        formData.append('questions', JSON.stringify(data));
-
-        const formies = document.createElement("form");
-        formies.action = "/form/create";
-        formies.method = "POST";
-        // foreach data add it to new form element
-        for(const val of formData.entries()){
-            let i = document.createElement("input");
-            i.name = val[0];
-            i.value = val[1];
-            formies.appendChild(i);
+            console.log("sent data:",formData);
+            postData(formies, (e)=>{
+                try {
+                    res = JSON.parse(e.response);
+                }catch(error){
+                    res = e.response;
+                }
+                console.log(res, JSON.stringify(res));
+            });
         }
-
-        console.log("sent data:",formData);
-
-        postData(formies, (e)=>{
-            try {
-                res = JSON.parse(e.response);
-            }catch(error){
-                res = e.response;
-            }
-            
-            console.log(res, JSON.stringify(res));
-        });
     
+
+        form.addEventListener('submit', (e)=>{
+            e.preventDefault();
+            dd();
+        });
 
 
     </script>
