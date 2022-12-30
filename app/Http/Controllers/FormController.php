@@ -100,18 +100,20 @@ class FormController extends Controller
      */
     public function createFormPost(Request $request)
     {
-        // ID = $request["id"]
-        // TODO: handle a post request from admins/users that create a new form
-
-
         // validate/create title/maxAnswers/userId/urlToken/password/maxAnswers/timeOpened/timeClosed
-        $formData = $request->validate([
-            'title' => ['required', 'string', 'min:3', 'max:255'],
-            'maxAnswers' => ['nullable', 'integer', 'gt:0'],
+        $formData = Validator::make($request->all(), [
+            'title' => 'required|string|min:3|max:255',
+            'maxAnswers' => 'nullable|integer|gt:0',
             'timeZone' => 'required|timezone',
             'timeOpened' => 'nullable|date',
             'timeClosed' => 'nullable|date',
         ]);
+        // if validator fails return error
+        if($formData->fails()){
+            return ["success"=>false,"error"=>$formData->errors()];
+        }
+        // transform $formData object into array
+        $formData = $request->all();
         // user_id
         $formData["userId"] = Auth::user()->id;
         // urlToken
@@ -120,44 +122,39 @@ class FormController extends Controller
         $request->has("password") ? $formData["password"] = Str::random(30) : $formData["password"] = null;
         // maxAnswers
         ($request->has("maxAnswers") && $request->input("maxAnswers") > 0) ? $formData["maxAnswers"] = (int)$request->input('maxAnswers') : $formData["maxAnswers"] = null;
-
+        // YYYY-MM-DD HH:MM:SS+HH:M
         $userTimeZone = $request->input("timeZone");
-        
         // timezone & timeOpened
         if($request->has('timeOpened')){
             // convert usertime to current server time
             $userDateOpenTime = new Carbon($formData['timeOpened'], $userTimeZone);
-            if($userDateOpenTime->format('Y-m-d H:i:sO') > Carbon::now($userTimeZone)->format('Y-m-d H:i:sO')){
+            if($userDateOpenTime->format('Y-m-d H:i:s') > Carbon::now($userTimeZone)->format('Y-m-d H:i:s')){
                 // if time is greater than now set timeOpened to user time converted to server time
-                $formData['timeOpened'] = $userDateOpenTime->format('Y-m-d H:i:sO');
+                $formData["timeOpened"] = $userDateOpenTime->format('Y-m-d H:i:sO');
             }else{
                 // set timeOpened to current servertime
-                $formData['timeOpened'] = Carbon::now($userTimeZone)->format('Y-m-d H:i:sO');
+                $formData["timeOpened"] = Carbon::now($userTimeZone)->format('Y-m-d H:i:sO');
             }
         }else{
             // set timeOpened to current servertime
-            $formData['timeOpened'] = Carbon::now($userTimeZone)->format('Y-m-d H:i:sO');
+            $formData["timeOpened"] = Carbon::now($userTimeZone)->format('Y-m-d H:i:sO');
         }
-        
         // timezone & timeClosed
         if($request->has('timeClosed')){
             // convert usertime to current server time
             $userDateCloseTime = new Carbon($formData['timeClosed'], $userTimeZone);
-            if($userDateCloseTime->format('Y-m-d H:i:sO') > Carbon::now($userTimeZone)->format('Y-m-d H:i:sO')){
+            if($userDateCloseTime->format('Y-m-d H:i:s') > Carbon::now($userTimeZone)->format('Y-m-d H:i:s')){
                 // if time is greater than now set timeClosed to user time converted to server time
-                $formData['timeClosed'] = $userDateCloseTime->format('Y-m-d H:i:sO');
+                $formData["timeClosed"] = $userDateCloseTime->format('Y-m-d H:i:sO');
             }else{
-                $formData['timeClosed'] = null;
+                $formData["timeClosed"] = null;
             }
         }else{
-            $formData['timeClosed'] = null;
+            $formData["timeClosed"] = null;
         }
-
-
         // validate questions array json stuff
         $requestData = request()->all();
         $questions = json_decode($requestData['questions'], true);
-
         // thank you chatgpt for saving me
         $validator = Validator::make(['questions' => $questions], [
             'questions' => 'required|array|min:1|max:255',
@@ -168,54 +165,30 @@ class FormController extends Controller
             'questions.*.choices' => 'required_if:questions.*.type,2|required_if:questions.*.type,3|array|nullable|min:1|max:25',
             'questions.*.choices.*' => 'required_if:questions.*.type,2|required_if:questions.*.type,3|string|max:255|min:1',
         ]);
-        
         if ($validator->fails()) {
             // validation failed
-            return "failure";
-            // return response()->json(['errors' => $validator->errors()], 400);
+            return ["success"=>false,"error"=>$validator->errors()];
         }
-        return "success";
-
-
-        // TODO make the question array and upload + handle first validator errors
-
-
-
-
-
+        // instantiate array
         $Q = [
             "title"=>$request->input("title"),
             "questions"=>[]
         ];
-
-        $RQ = json_decode($request->input("questions"), true);
-        if($RQ === null){
-            $response = ["success"=>false,"error"=>"Data error."];
-            return $response;
-        }
-        if(count($RQ) < 1){
-            // return error not enough questions given
-            $response = ["success"=>false,"error"=>"Can't have 0 questions."];
-            return $response;
-        }elseif(count($RQ) > 255){
-            // return error too many questions given
-            $response = ["success"=>false,"error"=>"Can't have more than 255 questions."];
-            return $response;
-        }
-        for($i = 0;$i<count($RQ);$i++){
+        // put stuff in array
+        for($i=0;$i<count($questions);$i++){
             // TODO validate stuff here
             $row = [
-                "question_title"=>$RQ[$i]["question_title"],
-                "type"=>$RQ[$i]["type"]
+                "question_title"=>$questions[$i]["question_title"],
+                "type"=>$questions[$i]["type"]
             ];
             if($row["type"] == 1){
                 // text input
-                $row["placeholder"] = $RQ[$i]["placeholder"];
+                $row["placeholder"] = $questions[$i]["placeholder"];
             }elseif($row["type"] == 2 || $row["type"] == 3){
                 // checkboxes/radio buttons
                 $row["choices"] = [];
-                for($j=0;$j<count($RQ[$i]["choices"]);$j++){
-                    array_push($row["choices"], $RQ[$i]["choices"][$j]);
+                for($j=0;$j<count($questions[$i]["choices"]);$j++){
+                    array_push($row["choices"], $questions[$i]["choices"][$j]);
                 }
             }else{
                 // wrong type
@@ -224,43 +197,7 @@ class FormController extends Controller
             array_push($Q["questions"], $row);
         }
         $formData["questions"] = $Q;
-        return $Q;
-
-
-
-        // question
-        // $formData['questions'] = TOEKOMSTIGE DATA];
-        // structure example
-        // $formData["questions"] = json_encode([
-        //     "title"=>"FORM TITLE",
-        //     "questions"=>[
-        //         [
-        //             "question_title"=>"QuestionTitle1",
-        //             "type"=>1,
-        //             "placeholder"=>"placeholder1"
-        //         ],
-        //         [
-        //             "question_title"=>"QuestionTitle2",
-        //             "type"=>2,
-        //             "choices"=>[
-        //                 0=>"checkbox text 1",
-        //                 1=>"checkbox text 2",
-        //                 2=>"checkbox text 3"
-        //             ]
-        //         ],
-        //         [
-        //             "question_title"=>"QuestionTitle3",
-        //             "type"=>3,
-        //             "choices"=>[
-        //                 0=>"choice 1",
-        //                 1=>"choice 2",
-        //                 2=>"choice 3"
-        //             ]
-        //         ]
-        //     ]
-        // ]);
-        
-        
+        // save to db
         $form = Form::create([
             'user_id' => $formData['userId'],
             'urlToken' => $formData['urlToken'],
@@ -270,18 +207,11 @@ class FormController extends Controller
             'timeOpened' => $formData['timeOpened'],
             'timeClosed' => $formData['timeClosed'],
         ]);
-        
-
-        return $formData;
-
-        // insert into db all is good $fornData
-        
-
-
-
-
-        $response = ["success"=>false,"error"=>"no data sent"];
-        return response($response, 200)->header('Content-Type', 'application/json');
+        if($form->exists()){
+            return ["success"=>true];
+        }else{
+            return ["success"=>false,"error"=>"Couldn't save data"];
+        }
     }
 
     /**
