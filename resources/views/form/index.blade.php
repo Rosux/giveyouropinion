@@ -7,7 +7,13 @@
 
         @foreach ($forms as $form)
 
-            {{ $form }} <br>
+            {{-- display form --}}
+            <pre>{{ $form }}</pre><br>
+            <form method="POST" action="/form/delete">
+                @csrf
+                <input type="number" value="{{ $form['id'] }}" name="id" hidden>
+                <button>delete this form</button>
+            </form><hr><br><br>
 
         @endforeach
 

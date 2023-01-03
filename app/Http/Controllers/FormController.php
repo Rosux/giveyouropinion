@@ -12,7 +12,6 @@ use App\Models\Form;
 use App\Models\Answer;
 use Ramsey\Uuid\Uuid;
 use Carbon\Carbon;
-use Moment\Moment;
 
 class FormController extends Controller
 {
@@ -176,7 +175,6 @@ class FormController extends Controller
         ];
         // put stuff in array
         for($i=0;$i<count($questions);$i++){
-            // TODO validate stuff here
             $row = [
                 "question_title"=>$questions[$i]["question_title"],
                 "type"=>$questions[$i]["type"]
@@ -226,6 +224,28 @@ class FormController extends Controller
             "result"=>"no data sent"
         ];
         return response($response, 200)->header('Content-Type', 'application/json');
+    }
+
+    /**
+     * handles the deletion of forms
+     */
+    public function deleteFormPost(Request $request){
+        // check for input id as integer
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|integer',
+        ]);
+        if($validator->fails()){
+            return ["success"=>false,"error"=>$validator->errors()];
+        }
+        $id = $request->input('id');
+        // delete form
+        $row = Form::where('id', $id)->where('user_id', Auth::user()->id)->delete();
+        // check if form was deleted
+        if($row>0){
+            return ["success"=>true];
+        }else{
+            return ["success"=>false,"error"=>"Couldn't delete row."];
+        }
     }
 
 

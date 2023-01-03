@@ -57,6 +57,8 @@ Route::prefix('form')->group(function () {
     Route::post('/create', [FormController::class, 'createFormPost'])->middleware('auth'); // creation backend url
     Route::get('/create', function(){return view('form.create');})->middleware('auth'); // creation page
     
+    // where admins/users go to delete their forms
+    Route::post('/delete', [FormController::class, 'deleteFormPost'])->middleware('auth');
     
     // where admins go to edit/close/change/open their forms
     Route::post('/edit', [FormController::class, 'editFormPost'])->middleware('auth'); // edit backend url (form id is sent with POST request)
