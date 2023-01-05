@@ -38,13 +38,34 @@
                     <p class="option-hint">*Leave empty to always keep it open</p>
                 </div>
             </div>
-            <div class="creation-questions">
+
+
+
+            <div class="questions">
                 {{-- add questions here with js --}}
+            </div>
 
 
+            
+            <div class="creation-questions">
 
 
+                {{-- choose from types --}}
+                <div class="add-question-choice">
+                    <div class="question-choice-title"><p>Choose a type</p></div>
 
+                    <div class="question-choice"><p>Multi choice answers</p></div>
+                    <div class="question-choice"><p>Single choice answers</p></div>
+                    <div class="question-choice"><p>Free answers</p></div>
+
+
+                </div>
+
+
+                {{-- question button --}}
+                <div class="add-question-button">
+                    <button>Add New Question</button>
+                </div>
 
 
 
