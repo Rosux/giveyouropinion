@@ -20,23 +20,5 @@ const lightModeTheme = `
     --border-color: #e6e6e6;
     color-scheme: light;
 `;
+
 const darkmode = new DarkMode(darkModeTheme, lightModeTheme);
-
-
-
-// if(document.readyState === "complete" || document.readyState === "interactive"){
-//     darkmode.applyListener();
-// }else{
-//     window.addEventListener("DOMContentLoaded", ()=>{
-//         darkmode.applyListener();
-//     });
-// }
-
-// function addDarkModeButtons(){
-//     const buttons = document.querySelectorAll("[dark-mode-switch]");
-//     buttons.forEach(e => {
-//         e.addEventListener("click", ()=>{
-//             darkmode.toggle();
-//         })
-//     });
-// }
