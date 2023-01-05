@@ -33,11 +33,11 @@ p, a, h1, h2, h3, h4, h5, h6{
 a:hover{
     color: var(--theme-color-dark);
 }
-[dark-mode-switch]{
+[darkmode-button]{
     display: grid;
     place-items: center;
 }
-[dark-mode-switch] > svg{
+[darkmode-button] > svg{
     height: 100%;
     fill: var(--text-color);
     cursor: pointer;

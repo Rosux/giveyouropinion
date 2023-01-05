@@ -220,6 +220,25 @@ class FormController extends Controller
         // ID = $request["id"]
         // TODO: handle a POST request where the user/admin edits their form
         // TODO: make sure the form belongs to the current user
+
+
+        $formData = Validator::make($request->all(), [
+            'title' => 'nullable|string|min:3|max:255',
+            'maxAnswers' => 'nullable|integer|gt:0',
+            'timeZone' => 'required_if:timeOpened,not_null|required_if:timeClosed,not_null|timezone',
+            'timeOpened' => 'nullable|date',
+            'timeClosed' => 'nullable|date',
+        ]);
+        // if validator fails return error
+        if($formData->fails()){
+            return ["success"=>false,"error"=>$formData->errors()];
+        }
+        // transform $formData object into array
+        $formData = $request->all();
+
+
+
+
         $response = [
             "result"=>"no data sent"
         ];
