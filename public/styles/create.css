@@ -110,23 +110,22 @@
     align-items: center;
 }
 .add-question-button{
-    width: 100%;
+    width: 80%;
     height: fit-content;
     display: grid;
     place-items: center;
 }
 .add-question-button > button{
-    width: fit-content;
     height: fit-content;
     background-color: var(--border-color);
     border: none;
     outline: none;
     border-radius: 2rem;
-    padding-top: .5rem;
-    padding-bottom: .5rem;
-    width: 50%;
+    padding: 1rem 0;
+    width: 100%;
     cursor: pointer;
     box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.32);
+    font-size: inherit;
 }
 
 
@@ -143,9 +142,6 @@
     place-items: center;
     width: 80%;
     margin-bottom: 2rem;
-    background-color: var(--border-color);
-    border-radius: 1rem;
-    box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.32);
     padding: 2rem 0 0 0;
 }
 .question-choice-title{
@@ -168,7 +164,12 @@
     place-items: center;
     cursor: pointer;
     border-radius: 5rem;
+    background-color: var(--border-color);
     box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.32);
+    transition: transform .4s ease-in-out;
+}
+.question-choice:hover{
+    transform: scale(105%);
 }
 .question-choice > p{
     text-align: center;
@@ -178,46 +179,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-/* add question + button */
-/* .creation-add-question{
-    width: 100%;
-    height: fit-content;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.creation-add-question > button{
-    width: 100%;
-    height: 2rem;
-    cursor: pointer;
-    background-color: var(--theme-color);
-    border: none;
-    outline: none;
-    border-radius: 10rem;
-    font-size: 2em;
-    position: relative;
-}
-.creation-add-question > button::before, .creation-add-question > button::after{
-    content: '';
-    width: 1.2rem;
-    height: .2rem;
-    border-radius: 1rem;
-    background-color: white;
-    position: absolute;
-    transform: translate(-50%, -50%);
-}
-.creation-add-question > button::before{
-    transform: translate(-50%, -50%) rotate(90deg);
-} */
 /* send button */
 .creation-send{
     width: 100%;
@@ -236,4 +197,14 @@
     border-radius: 2rem;
     color: #fff;
     cursor: pointer;
+}
+
+/* Questions */
+.questions{
+    width: 100%;
+    background-color: red;
+    height: 200px;
+}
+.questions > .question-wrapper{
+    width: 100%;
 }

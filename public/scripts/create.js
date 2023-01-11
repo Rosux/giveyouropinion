@@ -23,6 +23,7 @@ class CreateForm{
             this.questions[index] = this.questions[index + 1];
             this.questions[index + 1] = temp;
         }
+        this.#render();
     }
 
     /**
@@ -42,6 +43,7 @@ class CreateForm{
             Q.choices = options.choices || {};
         }
         this.questions[Object.keys(this.questions).length] = Q;
+        this.#render();
     }
 
     /**
@@ -55,6 +57,7 @@ class CreateForm{
             newQuestions[i] = this.questions[i];
         }
         this.questions = newQuestions;
+        this.#render();
     }
 
     /**
@@ -99,10 +102,87 @@ class CreateForm{
     }
 
     #render(){
-        // render the questions to the frontend
+        // render the questions
+
+        const outputElement = document.querySelector(".questions");
+        // empty output
+        outputElement.innerHTML = "";
+        // loop over questions
+        for (let i = 0; i < Object.keys(this.questions).length; i++) {
+            // this.questions[i];
+            let Q = document.createElement("div");
+            Q.classList.add("question-wrapper");
+            
+            // input
+            let inp = document.createElement("input");
+            inp.type = "text";
+            inp.placeholder = "Question Title";
+            inp.value = this.questions[i].question_title;
+            // when input changes update data
+            inp.addEventListener("input", (e)=>{
+                this.questions[i].question_title = e.target.value;
+            });
+            Q.appendChild(inp);
+
+            if(this.questions[i].type == 1){
+                let placeholderInput = document.createElement("input");
+                placeholderInput.type = "text";
+                placeholderInput.placeholder = "Question Placeholder";
+                placeholderInput.value = this.questions[i].placeholder;
+                // handle input event
+                placeholderInput.addEventListener("input", (e)=>{
+                    this.questions[i].placeholder = e.target.value;
+                });
+                Q.appendChild(placeholderInput);
+            }else if(this.questions[i].type == 2){
+
+
+
+
+
+            }
+
+            // append Q to outputElement
+            outputElement.appendChild(Q);
+        }
+        
+
+        
+
+
     }
 
 }
 
 const create = new CreateForm();
+create.addQuestion("title1", 1, {placeholder: "placeholder1"});
 
+
+
+
+
+
+
+
+
+
+
+
+
+function showOptions(){
+    // hides .add-question-button and shows .add-question-choice
+    document.querySelector(".add-question-button").style.visibility = "collapse";
+    document.querySelector(".add-question-choice").style.visibility = "visible";
+}
+
+function choice(choice=0){
+    document.querySelector(".add-question-button").style.visibility = "visible";
+    document.querySelector(".add-question-choice").style.visibility = "collapse";
+    if(choice==1){
+        // open ended question
+    }else if(choice==2){
+        // single choice from list
+    }else if(choice==3){
+        // multiple choices from list
+    }
+}
