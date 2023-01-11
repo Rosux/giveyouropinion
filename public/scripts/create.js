@@ -101,6 +101,19 @@ class CreateForm{
 
     }
 
+    /**
+     * add a new choice to type 2/3 questions
+     * @param {Number} key key of property to add a choice to
+     * @param {String} value value to add as option
+     */
+    addQuestionOption(key=-1, value=""){
+        // obj doesnt have correct type
+        if(this.questions[key] == undefined || this.questions[key].type == 1 || this.questions[key].choices == undefined){
+            return;
+        } 
+        this.questions[key].choices[Object.keys(this.questions[key].choices).length] = value;
+    }
+
     #render(){
         // render the questions
 
@@ -156,7 +169,13 @@ class CreateForm{
 
 const create = new CreateForm();
 create.addQuestion("title1", 1, {placeholder: "placeholder1"});
-
+create.addQuestion("title2", 2, {choices: {
+    0: "choice0",
+    1: "choice1",
+    2: "choice2"
+}});
+// create.addQuestionOption(1, "value345 ofzo");
+console.log(create.questions);
 
 
 
