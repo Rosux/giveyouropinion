@@ -37,33 +37,14 @@
                     <p class="option-hint">*Leave empty to always keep it open</p>
                 </div>
             </div>
-
-
+            
+            <div class="page-title"><p>Questions</p></div>
 
             <div class="questions">
-                {{-- add questions here with js --}}
-
-
-                {{-- <div class="question-wrapper">
-                    <input type="text" name="Question Title">
-                    <input type="text" placeholder="Question Placeholder">
-                </div> --}}
-
-                
-                {{-- <div class="question-wrapper">
-                    <input type="text" name="Question Title">
-                    <div class="question-choices">
-                        <input type="text" placeholder="Option 1">
-                        <input type="text" placeholder="Option 2">
-                        <input type="text" placeholder="Option 3">
-                    </div>
-                    <button>Add a choice</button>
-                </div> --}}
-
+                {{-- questions get added here with js --}}
             </div>
 
-
-            
+            {{-- the add new question button --}}
             <div class="creation-questions">
                 {{-- choose from types --}}
                 <div class="add-question-choice" style="visibility: collapse">
@@ -77,29 +58,12 @@
                     <button onclick="showOptions();">Add New Question</button>
                 </div>
             </div>
-
-
-
-
+            
+            {{-- sending button --}}
             <div class="creation-send">
-                <button>Create</button>
+                <button onclick="sendData();">Create</button>
             </div>
         </div>
     </div>
 
-
-
-    {{-- <form id="form" method="POST" action="/form/create">
-        @csrf
-
-        <input type="text" name="title" placeholder="title" value="blabla"><br>
-
-
-        <input type="checkbox" name="password" placeholder="password"><br>
-        <input type="number" name="maxAnswers" placeholder="maxAnswers"><br>
-        <input type="datetime-local" name="timeOpened" placeholder="timeOpened" value="2022-12-30T11:11"><br>
-        <input type="datetime-local" name="timeClosed" placeholder="timeClosed"><br>
-        <input type="submit" value="post">
-    </form> --}}
-    
 </x-layout>
