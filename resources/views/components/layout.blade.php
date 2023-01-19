@@ -21,7 +21,7 @@
         <div class="mobile-inner-wrapper">
             <div class="mobile-header-links">
                 {{-- mobile header links --}}
-                <a dark-mode-switch><svg width="24" height="24" viewBox="0 0 24 24"><path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12-5.373-12-12-12-12 5.373-12 12zm2 0c0-5.514 4.486-10 10-10v20c-5.514 0-10-4.486-10-10z"/></svg></a>
+                <a darkmode-button="switch"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12-5.373-12-12-12-12 5.373-12 12zm2 0c0-5.514 4.486-10 10-10v20c-5.514 0-10-4.486-10-10z"/></svg></a>
                 @auth
                 <a href="/form/create">Create</a>
                 <a href="/form">Form</a>
@@ -39,7 +39,7 @@
         <a href="/">GYO</a>
         <div class="header-links">
             {{-- normal header links --}}
-            <a dark-mode-switch><svg width="24" height="24" viewBox="0 0 24 24"><path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12-5.373-12-12-12-12 5.373-12 12zm2 0c0-5.514 4.486-10 10-10v20c-5.514 0-10-4.486-10-10z"/></svg></a>
+            <a darkmode-button="switch"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12-5.373-12-12-12-12 5.373-12 12zm2 0c0-5.514 4.486-10 10-10v20c-5.514 0-10-4.486-10-10z"/></svg></a>
             @auth
             <a href="/form/create">Create</a>
             <a href="/form">Form</a>

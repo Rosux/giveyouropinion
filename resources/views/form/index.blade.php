@@ -16,6 +16,9 @@
             </form><hr><br><br>
 
         @endforeach
+    @else
+
+        No forms found
 
     @endisset
     

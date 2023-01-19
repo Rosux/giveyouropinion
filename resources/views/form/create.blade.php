@@ -1,106 +1,69 @@
 {{-- route = http://127.0.0.1:8000/form/create/ --}}
 <x-layout>
-    Creation page
-
-    <form id="form" method="POST" action="/form/create">
-        @csrf
-
-        <input type="text" name="title" placeholder="title" value="blabla"><br>
-
-        {{-- <input type="text" name="questions" placeholder="questions"><br> --}}
-
-        <input type="checkbox" name="password" placeholder="password"><br>
-        <input type="number" name="maxAnswers" placeholder="maxAnswers"><br>
-        <input type="datetime-local" name="timeOpened" placeholder="timeOpened" value="2022-12-30T11:11"><br>
-        <input type="datetime-local" name="timeClosed" placeholder="timeClosed"><br>
-        <input type="submit" value="post">
-    </form>
+    <link rel="stylesheet" href="{{ asset("styles/create.css") }}">
+    <script defer src="{{ asset("scripts/create.js") }}"></script>
     
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script defer>
-        var csrf = document.querySelector('meta[name="csrf-token"]').content;
-
-        function postData(form, callbackFunction, errorFunction){
-            const request = new XMLHttpRequest();
-            request.onreadystatechange = function(){
-                if(request.readyState == XMLHttpRequest.DONE && this.status == 200){
-                    callbackFunction(this);
-                }else if(request.readyState == XMLHttpRequest.DONE && request.status != 200){
-                    console.error("Error: response failed");
-                    if (typeof errorFunction === "function") { 
-                        errorFunction(this);
-                    }
-                    return;
-                }
-            }
-            request.dataType = 'json';
-            request.open("POST", form.getAttribute("action"), true);
-            request.send(new FormData(form));
-        }
-
-        function dd(){
-            var data = [
-                {
-                    question_title: 'title1',
-                    type: 1,
-                    placeholder: 'placeholder1'
-                },
-                {
-                    question_title: 'title2',
-                    type: 2,
-                    choices: {
-                        0: "blabla0",
-                        1: "blabla1",
-                        2: "blabla2"
-                    }
-                },
-                {
-                    question_title: 'title2',
-                    type: 3,
-                    choices: {
-                        0: "blabla0",
-                        1: "blabla1",
-                        2: "blabla2"
-                    }
-                }
-            ];
-            const form = document.getElementById('form');
-            let formData = new FormData(form);
-            formData.append('questions', JSON.stringify(data));
-
-            // TIMEZONE TIMEZONE
-            const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            // add the timeZone object to the form data
-            formData.append('timeZone', userTimezone);
-            // TIMEZONE TIMEZONE
-
-            const formies = document.createElement("form");
-            formies.action = "/form/create";
-            formies.method = "POST";
-            // foreach data add it to new form element
-            for(const val of formData.entries()){
-                let i = document.createElement("input");
-                i.name = val[0];
-                i.value = val[1];
-                formies.appendChild(i);
-            }
-            console.log("sent data:",formData);
-            postData(formies, (e)=>{
-                try {
-                    res = JSON.parse(e.response);
-                }catch(error){
-                    res = e.response;
-                }
-                console.log(res, JSON.stringify(res));
-            });
-        }
+    <div class="page-title"><p>Create a new form</p></div>
     
+    <div class="creation-wrapper-wrapper">
+        <div class="creation-wrapper">
 
-        form.addEventListener('submit', (e)=>{
-            e.preventDefault();
-            dd();
-        });
+            <div class="creation-title-wrapper">
+                <input type="text" name="title" id="title" placeholder="New Form Title">
+            </div>
 
+            <div class="creation-settings-wrapper">
+                <div class="creation-password">
+                    <p>Generate Password?</p>
+                    <div class="button-switch">
+                        <input type="checkbox" name="password" id="password">
+                        <label for="password"><div class="circle"></div></label>
+                    </div>
+                    <p class="option-hint">*Adds a password in the url</p>
+                </div>
+                <div class="creation-max-answers">
+                    <p>Maximum Answers?</p>
+                    <input type="number" name="maxAnswers" id="maxAnswers" placeholder="Maximum Answers">
+                    <p class="option-hint">*Leave empty to allow unlimited asnwers</p>
+                </div>
+                <div class="creation-time-opened">
+                    <p>Opening Time?</p>
+                    <input type="datetime-local" name="timeOpened" id="timeOpened">
+                    <p class="option-hint">*Leave empty to open right now</p>
+                </div>
+                <div class="creation-time-closed">
+                    <p>Closing Time?</p>
+                    <input type="datetime-local" name="timeClosed" id="timeClosed">
+                    <p class="option-hint">*Leave empty to always keep it open</p>
+                </div>
+            </div>
+            
+            <div class="page-title"><p>Questions</p></div>
 
-    </script>
+            <div class="questions">
+                {{-- questions get added here with js --}}
+            </div>
+
+            {{-- the add new question button --}}
+            <div class="creation-questions">
+                {{-- choose from types --}}
+                <div class="add-question-choice" style="visibility: collapse">
+                    <div class="question-choice-title"><p>Choose a type</p></div>
+                    <div class="question-choice" onclick="choice(3);"><p>Multi Choice Question</p></div>
+                    <div class="question-choice" onclick="choice(2);"><p>Single Choice Question</p></div>
+                    <div class="question-choice" onclick="choice(1);"><p>Open Question</p></div>
+                </div>
+                {{-- question button --}}
+                <div class="add-question-button">
+                    <button onclick="showOptions();">Add New Question</button>
+                </div>
+            </div>
+            
+            {{-- sending button --}}
+            <div class="creation-send">
+                <button onclick="sendData();">Create</button>
+            </div>
+        </div>
+    </div>
+
 </x-layout>

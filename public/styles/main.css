@@ -3,9 +3,9 @@
     --header-color: #fff;
     --background-color: #fff;
     --text-color: #111;
-    --theme-color: #719A51;
-    --theme-color-dark: #426D54;
-    --theme-color-light: #B0CF98;
+    --theme-color: #405693;
+    --theme-color-dark: #162b6e;
+    --theme-color-light: #189ec7;
     --border-color: #e6e6e6;
     --font: 'Noto Sans', sans-serif;
     color-scheme: light;
@@ -33,15 +33,58 @@ p, a, h1, h2, h3, h4, h5, h6{
 a:hover{
     color: var(--theme-color-dark);
 }
-[dark-mode-switch]{
+[darkmode-button]{
     display: grid;
     place-items: center;
 }
-[dark-mode-switch] > svg{
+[darkmode-button] > svg{
     height: 100%;
     fill: var(--text-color);
     cursor: pointer;
 }
+/* button switch off/on */
+.button-switch{
+    width: fit-content;
+    height: fit-content;
+    user-select: none;
+}
+.button-switch > input{
+    display: none;
+}
+.button-switch > label{
+    width: 4em;
+    height: 2em;
+    background-color: #d3d3d3;
+    cursor: pointer;
+    display: block;
+    border-radius: 10em;
+    position: relative;
+    transition: background-color .4s ease-in-out;
+}
+.button-switch > label > .circle{
+    position: absolute;
+    height: 100%;
+    top: 50%;
+    left: 0;
+    transform: translate(0, -50%);
+    aspect-ratio: 1/1;
+    transition: all .4s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.button-switch > label > .circle::after{
+    display: block;
+    content: "";
+    position: relative;
+    border-radius: 100%;
+    background-color: #fff;
+    height: 80%;
+    aspect-ratio: 1/1;
+    transition: all .4s ease-in-out;
+}
+.button-switch > input:checked + label{background-color: var(--theme-color);}
+.button-switch > input:checked + label > .circle{left: 50%;}
 /* header */
 header{
     width: 100%;

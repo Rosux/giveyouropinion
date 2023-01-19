@@ -1,0 +1,330 @@
+.page-title{
+    width: 100%;
+    height: fit-content;
+    display: grid;
+    place-items: center;
+}
+.page-title > p{
+    font-size: 2rem;
+    padding: 1.5rem 0;
+    width: fit-content;
+    height: fit-content;
+}
+.creation-wrapper-wrapper{
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.creation-wrapper{
+    height: fit-content;
+    width: 60%;
+    padding: 2rem 0 10rem 0;
+    /* background-color: red; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.creation-wrapper > *{
+    margin-bottom: 2rem;
+}
+.creation-wrapper > .page-title{
+    margin-bottom: 0;
+}
+/* title */
+.creation-title-wrapper{
+    width: 100%;
+    height: fit-content;
+}
+.creation-title-wrapper > input[type='text']{
+    width: 100%;
+    text-align: center;
+    font-size: 1.3rem;
+    border: none;
+    outline: none;
+    border-radius: 5rem;
+    background-color: var(--border-color);
+    box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.32);
+    padding: 1rem 2rem;
+}
+/* settings */
+.creation-settings-wrapper{
+    width: 80%;
+    margin-left: 10%;
+    height: fit-content;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    place-items: center;
+    gap: 3em;
+}
+.creation-settings-wrapper > *{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--border-color);
+    box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.32);
+    border-radius: 1rem;
+    padding: 1rem 2rem;
+}
+.creation-settings-wrapper > * > p{
+    width: 100%;
+    text-align: center;
+    font-size: 1.3em;
+    margin-bottom: .5rem;
+}
+.creation-settings-wrapper > * > p.option-hint{
+    margin-top: 1em;
+    font-size: .8em;
+}
+.creation-settings-wrapper > .creation-max-answers > input{
+    width: fit-content;
+    font-size: 1em;
+    border: none;
+    outline: none;
+    border-radius: 2rem;
+    padding: .5rem 1rem;
+    display: block;
+    background-color: var(--background-color);
+    color: var(--text-color)
+}
+.creation-settings-wrapper > .creation-time-closed > input,
+.creation-settings-wrapper > .creation-time-opened > input{
+    width: fit-content;
+    font-size: 1em;
+    border: none;
+    outline: none;
+    border-radius: 2rem;
+    padding: .5rem 1rem;
+    display: block;
+    background-color: var(--background-color);
+    color: var(--text-color)
+}
+/* question creation */
+.creation-questions{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.add-question-button{
+    width: 80%;
+    height: fit-content;
+    display: grid;
+    place-items: center;
+}
+.add-question-button > button{
+    height: fit-content;
+    background-color: var(--border-color);
+    border: none;
+    outline: none;
+    border-radius: 2rem;
+    padding: 1rem 0;
+    width: 100%;
+    cursor: pointer;
+    box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.32);
+    font-size: inherit;
+}
+/* question type choice */
+.add-question-choice{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, min-height);
+    grid-column-gap: 2rem;
+    place-items: center;
+    width: 80%;
+    margin-bottom: 2rem;
+    padding: 2rem 0 0 0;
+}
+.question-choice-title{
+    width: 100%;
+    height: fit-content;
+    grid-area: 1 / 1 / 2 / 4;
+}
+.question-choice-title > p{
+    width: 100%;
+    text-align: center;
+    font-size: 1em;
+    color: var(--text-color);
+    font-size: 1.5em;
+    padding-bottom: 2rem;
+}
+.question-choice{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    border-radius: 5rem;
+    background-color: var(--border-color);
+    box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.32);
+    transition: transform .4s ease-in-out;
+}
+.question-choice:hover{
+    transform: scale(105%);
+}
+.question-choice > p{
+    text-align: center;
+    padding: 1rem 0;
+}
+/* send button */
+.creation-send{
+    width: 100%;
+    height: fit-content;
+    display: grid;
+    place-items: center;
+}
+.creation-send > button{
+    width: fit-content;
+    height: fit-content;
+    font-size: 1.3rem;
+    background-color: var(--theme-color);
+    border: none;
+    outline: none;
+    padding: .5rem 15ch;
+    border-radius: 2rem;
+    color: #fff;
+    cursor: pointer;
+}
+/* Questions */
+.questions{
+    width: 80%;
+    margin-left: 10%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0;
+}
+.questions > .question-wrapper{
+    width: 100%;
+    height: fit-content;
+    padding: 1rem 0;
+    display: grid;
+    grid-template-columns: 10% 1fr 10%;
+    grid-template-rows: auto;
+    grid-column-gap: 0px;
+    margin-bottom: 2rem;
+    background-color: var(--border-color);
+    border-radius: 1rem;
+    box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.32);
+}
+.questions > .question-wrapper > .question-type{
+    grid-area: 1 / 2 / 2 / 3;
+    width: 100%;
+}
+.questions > .question-wrapper > .question-type > p{
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    padding: 1rem 0;
+}
+.questions > .question-wrapper > .question-number{
+    grid-area: 1 / 1 / 3 / 2;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+}
+.questions > .question-wrapper > .question-number > p{
+    width: fit-content;
+    height: fit-content;
+    font-size: 2rem;
+}
+.questions > .question-wrapper > .delete-move-wrapper{
+    grid-area: 1 / 3 / 3 / 4;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+.questions > .question-wrapper > .delete-move-wrapper > button{
+    width: fit-content;
+    aspect-ratio: 1/1;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+    fill: var(--text-color);
+    transition: background-color .4s ease-in-out;
+}
+.questions > .question-wrapper > .delete-move-wrapper > button:hover{
+    background-color: rgba(255, 255, 255, 0.3);
+}
+.questions > .question-wrapper > .delete-move-wrapper > button > svg{
+    width: 100%;
+    height: 100%;
+}
+.questions > .question-wrapper > .question-input{
+    grid-area: 2 / 2 / 3 / 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.questions > .question-wrapper > .question-input > p{
+    width: 100%;
+    text-align: center;
+    font-size: 1em;
+    padding: 0 0 1em 0;
+}
+.questions > .question-wrapper > .question-input > .question-choices > input,
+.questions > .question-wrapper > .question-input > input{
+    width: 100%;
+    font-size: 1em;
+    border: none;
+    outline: none;
+    border-radius: 1rem;
+    padding: .5em 1em;
+    display: block;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin-bottom: .5em;
+}
+.questions > .question-wrapper > .question-input > .question-choices > input{
+    margin: 0;
+}
+.questions > .question-wrapper > .question-input > .question-choices{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    grid-template-rows: auto;
+    grid-column-gap: 2ch;
+    grid-row-gap: .5em;
+    border-top: solid 1px var(--text-color);
+    padding: 1rem 0;
+}
+.questions > .question-wrapper > .question-input > .question-choices > button{
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+    fill: var(--text-color);
+    transition: background-color .4s ease-in-out;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1/1;
+}
+.questions > .question-wrapper > .question-input > .question-choices > button:hover{
+    background-color: rgba(255, 255, 255, 0.3);
+}
+.questions > .question-wrapper > .question-input > button{
+    width: fit-content;
+    border: none;
+    outline: none;
+    background-color: var(--background-color);
+    border-radius: 2rem;
+    font-size: 1em;
+    padding: .5rem 4rem;
+    cursor: pointer;
+}

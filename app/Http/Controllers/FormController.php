@@ -118,7 +118,7 @@ class FormController extends Controller
         // urlToken
         $formData["urlToken"] = Uuid::uuid4();
         // password
-        $request->has("password") ? $formData["password"] = Str::random(30) : $formData["password"] = null;
+        ($request->has("password") && $request->input("password") == true) ? $formData["password"] = Str::random(30) : $formData["password"] = null;
         // maxAnswers
         ($request->has("maxAnswers") && $request->input("maxAnswers") > 0) ? $formData["maxAnswers"] = (int)$request->input('maxAnswers') : $formData["maxAnswers"] = null;
         // YYYY-MM-DD HH:MM:SS+HH:M
@@ -153,15 +153,15 @@ class FormController extends Controller
         }
         // validate questions array json stuff
         $requestData = request()->all();
-        $questions = json_decode($requestData['questions'], true);
+        $questions = json_decode(json_encode($requestData['questions']), true);
         // thank you chatgpt for saving me
         $validator = Validator::make(['questions' => $questions], [
-            'questions' => 'required|array|min:1|max:255',
+            'questions' => 'required|array|min:1|max:50',
             'questions.*' => 'required|array',
             'questions.*.question_title' => 'required|string|max:255|min:1',
             'questions.*.type' => 'required|integer|in:1,2,3',
             'questions.*.placeholder' => 'required_if:questions.*.type,1|string|nullable|max:255|min:1',
-            'questions.*.choices' => 'required_if:questions.*.type,2|required_if:questions.*.type,3|array|nullable|min:1|max:25',
+            'questions.*.choices' => 'required_if:questions.*.type,2|required_if:questions.*.type,3|array|nullable|min:2|max:25',
             'questions.*.choices.*' => 'required_if:questions.*.type,2|required_if:questions.*.type,3|string|max:255|min:1',
         ]);
         if ($validator->fails()) {
@@ -186,13 +186,13 @@ class FormController extends Controller
                 // checkboxes/radio buttons
                 $row["choices"] = [];
                 for($j=0;$j<count($questions[$i]["choices"]);$j++){
-                    array_push($row["choices"], $questions[$i]["choices"][$j]);
+                    $row["choices"][$j] = $questions[$i]["choices"][$j];
                 }
             }else{
                 // wrong type
                 continue;
             }
-            array_push($Q["questions"], $row);
+            $Q["questions"][$i] = $row;
         }
         $formData["questions"] = $Q;
         // save to db
@@ -206,7 +206,7 @@ class FormController extends Controller
             'timeClosed' => $formData['timeClosed'],
         ]);
         if($form->exists()){
-            return ["success"=>true];
+            return ["success"=>true,"newUrlToken"=>(string)$formData['urlToken'],"newPassword"=>(string)$formData["password"]];
         }else{
             return ["success"=>false,"error"=>"Couldn't save data"];
         }
@@ -220,6 +220,25 @@ class FormController extends Controller
         // ID = $request["id"]
         // TODO: handle a POST request where the user/admin edits their form
         // TODO: make sure the form belongs to the current user
+
+
+        $formData = Validator::make($request->all(), [
+            'title' => 'nullable|string|min:3|max:255',
+            'maxAnswers' => 'nullable|integer|gt:0',
+            'timeZone' => 'required_if:timeOpened,not_null|required_if:timeClosed,not_null|timezone',
+            'timeOpened' => 'nullable|date',
+            'timeClosed' => 'nullable|date',
+        ]);
+        // if validator fails return error
+        if($formData->fails()){
+            return ["success"=>false,"error"=>$formData->errors()];
+        }
+        // transform $formData object into array
+        $formData = $request->all();
+
+
+
+
         $response = [
             "result"=>"no data sent"
         ];
