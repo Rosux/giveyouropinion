@@ -4,9 +4,9 @@ const darkModeTheme = `
     --header-color: #111;
     --background-color: #111;
     --text-color: #fff;
-    --theme-color: #719A51;
-    --theme-color-dark: #426D54;
-    --theme-color-light: #B0CF98;
+    --theme-color: #405693;
+    --theme-color-dark: #162b6e;
+    --theme-color-light: #189ec7;
     --border-color: #373737;
     color-scheme: dark;
 `;
@@ -14,9 +14,9 @@ const lightModeTheme = `
     --header-color: #fff;
     --background-color: #fff;
     --text-color: #111;
-    --theme-color: #719A51;
-    --theme-color-dark: #426D54;
-    --theme-color-light: #B0CF98;
+    --theme-color: #405693;
+    --theme-color-dark: #162b6e;
+    --theme-color-light: #189ec7;
     --border-color: #e6e6e6;
     color-scheme: light;
 `;
